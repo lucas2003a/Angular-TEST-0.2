@@ -19,20 +19,80 @@
   <main>
     <div class="container">
       <h1>Formularios</h1>
-      <form action="" method="POST" [formGroup]="LoginForm" (submit)="OnSubmit()">
-        <legend>Login</legend>
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input type="text" name="email" formControlName="email" class="form-control" id="email" placeholder="Email" >
+      <div class="row">
+        <div class="col-md-6">
+          <form action="" method="POST" [formGroup]="LoginForm" (submit)="OnSubmit()">
+            <legend>Registrar usuarios</legend>
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" name="email" formControlName="email" class="form-control" id="email"
+                placeholder="Email" required>
+
+              <!--
+                LoginForm['controls']['email'].dirty  => Accede al control email de LoginForm
+                .dirty                                => Es una propiedad del control del formulario, evalúa si el usuario ha tenido interacción con el control
+                .errors                               => Es una propiedad del control del formulario, evalúa si en el controle existe un error
+
+                La condición sería "Si el usuario ha tenido interacción con el control email y si el control email contiene errores ..."
+              -->
+              <div *ngIf="LoginForm['controls']['email'].dirty && LoginForm['controls']['email'].errors">
+
+                <!-- Si es required -->
+                <small *ngIf="LoginForm['controls']['email'].errors['required']" class="text-danger">El email es
+                  necesario</small>
+
+                <!-- Si el formato es incorrecto -->
+                <small *ngIf="LoginForm['controls']['email'].errors['email']" class="text-danger">El campo debe ser un
+                  correo valido</small>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input type="password" name="password" id="password" class="form-control" formControlName="password"
+                placeholder="Password" required>
+
+              <div *ngIf="LoginForm['controls']['password'].dirty && LoginForm['controls']['password'].errors">
+                <small *ngIf="LoginForm['controls']['password'].errors['required']" class="text-danger">La contraseña es
+                  necesaria</small>
+              </div>
+            </div>
+            <div class="m-2">
+              <button type="submit" class="btn btn-primary" [disabled]="LoginForm.invalid">Registrar</button>
+            </div>
+          </form>
         </div>
-        <div class="form-group">
-          <label for="password">Password:</label>
-          <input type="password" name="password" id="password" class="form-control" formControlName="password" placeholder="Password">
+        <div class="col-md-6">
+          <div class="table-responsive">
+            <caption>Lista de estudiantes</caption>
+            <table class="table table-light">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Correo</th>
+                  <th scope="col">Contraseña</th>
+                  <th scope="col">Operaciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="" *ngFor="let student of students; let index = index">
+                  <td scope="row">{{ index + 1 }}</td>
+                  <td>{{ student.email }}</td>
+                  <td>{{ student.password }}</td>
+                  <td>
+                    <button type="button" class="btn btn-danger" (click)="DeleteStudent(index)">Eliminar</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="alert alert-danger" role="alert" *ngIf="students.length == 0">
+              <p><strong>No hay registros</strong></p>
+              <hr />
+              <p class="mb-0">No se han podido encontrar registros</p>
+            </div>
+          </div>
+
         </div>
-        <div class="m-2">
-          <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
-        </div>
-      </form>
+      </div>
     </div>
   </main>
   <footer>
